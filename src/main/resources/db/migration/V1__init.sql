@@ -16,6 +16,7 @@ CREATE TABLE patient (
 -- =====================
 -- TABLE MEDECIN
 -- =====================
+
 CREATE TABLE medecin (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50),
