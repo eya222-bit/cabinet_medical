@@ -1,18 +1,14 @@
+-- Insertion des rôles disponibles
+INSERT INTO app_role (role_name) VALUES
+                                     ('ADMIN'),
+                                     ('MEDECIN'),
+                                     ('SECRETAIRE');
 
--- PATIENT TEST
--- =====================
-INSERT INTO patient 
-(cin, nom, prenom, telephone, date_creation)
-VALUES 
-('12345578', 'Ali', 'Ahmed', '20000000', NOW()),
-('87654321', 'Ben', 'Sara', '50000000', NOW());
+-- Insertion de l'utilisateur administrateur
+-- Password : 'password123' (haché avec BCrypt)
+INSERT INTO app_user (username, password) VALUES
+    ('admin', '$2a$10$8.I6Yt05/P.E8.Y9V.6Oquh2xYmJ7t8T/NqHlVzV9Z9.6z7z8.z6.');
 
-
--- =====================
--- MEDECIN TEST
--- =====================
-INSERT INTO medecin
-(nom, prenom, specialite, numero_ordre, actif)
-VALUES
-('Trabelsi', 'Mohamed', 'Cardiologue', 'MED001', true),
-('Gharbi', 'Amal', 'Generaliste', 'MED002', true);
+-- Liaison entre l'utilisateur 1 (admin) et le rôle 'ADMIN'
+INSERT INTO app_user_roles (app_user_id, roles_role_name) VALUES
+    (1, 'ADMIN');

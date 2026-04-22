@@ -1,0 +1,36 @@
+package com.example.demo.service.impl;
+import com.example.demo.entity.Patient;
+import com.example.demo.repository.PatientRepository;
+import com.example.demo.service.PatientService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
+
+public class PatientServiceImpl implements PatientService {
+@Autowired
+    private  PatientRepository patientRepository ;
+
+    @Override
+    public List<Patient> getAllPatients() {
+        return patientRepository.findAll();
+    }
+
+    @Override
+    public Patient getPatientById(Long id) {
+        return patientRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Patient non trouvé"));
+    }
+
+    @Override
+    public Patient savePatient(Patient patient) {
+        return patientRepository.save(patient);
+    }
+
+    @Override
+    public void deletePatient(Long id) {
+        patientRepository.deleteById(id);
+    }
+}
