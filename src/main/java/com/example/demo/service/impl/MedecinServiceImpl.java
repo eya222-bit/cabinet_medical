@@ -1,6 +1,4 @@
 package com.example.demo.service.impl;
-
-
 import com.example.demo.entity.Medecin;
 import com.example.demo.repository.MedecinRepository;
 import com.example.demo.service.MedecinService;
@@ -26,6 +24,7 @@ public class MedecinServiceImpl implements MedecinService {
         return medecinRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Médecin non trouvé"));
     }
+    
 
     @Override
     public Medecin saveMedecin(Medecin medecin) {
