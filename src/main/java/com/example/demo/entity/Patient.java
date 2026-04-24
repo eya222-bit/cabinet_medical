@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -35,13 +36,7 @@ public class Patient {
 		this.prenom = prenom;
 	}
 
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+	
 
 	public String getTelephone() {
 		return telephone;
@@ -74,5 +69,13 @@ public class Patient {
 
 	public void setCin(String cin) {
 		this.cin = cin;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 }

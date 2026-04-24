@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -62,5 +63,13 @@ public class Medecin {
 
 	public void setActif(boolean actif) {
 		this.actif = actif;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 }
