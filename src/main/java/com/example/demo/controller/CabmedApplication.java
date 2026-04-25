@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class CabmedApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(CabmedApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(CabmedApplication.class, args);
+    }
 }

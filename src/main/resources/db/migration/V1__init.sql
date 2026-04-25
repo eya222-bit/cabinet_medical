@@ -1,73 +1,57 @@
--- =====================
--- TABLE PATIENT
--- =====================
+-- V1__init.sql : création des tables
 CREATE TABLE patient (
                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         cin VARCHAR(20) UNIQUE,
-                         nom VARCHAR(50),
-                         prenom VARCHAR(50),
-                         date_naissance DATE,
+                         cin VARCHAR(20) NOT NULL UNIQUE,
+                         nom VARCHAR(100) NOT NULL,
+                         prenom VARCHAR(100) NOT NULL,
+                         date_naissance DATE NOT NULL,
                          telephone VARCHAR(20),
                          email VARCHAR(100),
                          antecedents TEXT,
-                         date_creation DATETIME
+                         date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =====================
--- TABLE MEDECIN
--- =====================
 CREATE TABLE medecin (
                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         nom VARCHAR(50),
-                         prenom VARCHAR(50),
+                         nom VARCHAR(100) NOT NULL,
+                         prenom VARCHAR(100) NOT NULL,
                          specialite VARCHAR(100),
-                         numero_ordre VARCHAR(50) UNIQUE,
+                         numero_ordre VARCHAR(50) NOT NULL UNIQUE,
                          telephone VARCHAR(20),
                          email VARCHAR(100),
-                         actif BOOLEAN
+                         actif BOOLEAN DEFAULT TRUE
 );
 
--- =====================
--- TABLE RENDEZ_VOUS
--- =====================
 CREATE TABLE rendez_vous (
                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                             patient_id BIGINT,
-                             medecin_id BIGINT,
-                             date_heure DATETIME,
-                             duree_minutes INT,
-                             statut VARCHAR(20),
+                             patient_id BIGINT NOT NULL,
+                             medecin_id BIGINT NOT NULL,
+                             date_heure DATETIME NOT NULL,
+                             duree_minutes INT NOT NULL DEFAULT 30,
+                             statut ENUM('PLANIFIE', 'CONFIRME', 'ANNULE', 'TERMINE') NOT NULL,
                              motif VARCHAR(255),
-                             CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id),
-                             CONSTRAINT fk_medecin FOREIGN KEY (medecin_id) REFERENCES medecin(id)
+                             CONSTRAINT fk_rdv_patient FOREIGN KEY (patient_id) REFERENCES patient(id) ON DELETE CASCADE,
+                             CONSTRAINT fk_rdv_medecin FOREIGN KEY (medecin_id) REFERENCES medecin(id) ON DELETE CASCADE,
+                             UNIQUE KEY uk_rdv_medecin_dateheure (medecin_id, date_heure)
 );
 
--- =====================
--- TABLE ORDONNANCE
--- =====================
 CREATE TABLE ordonnance (
                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                            rendez_vous_id BIGINT UNIQUE,
-                            date_emission DATE,
+                            rendez_vous_id BIGINT NOT NULL UNIQUE,
+                            date_emission DATE NOT NULL,
                             observations TEXT,
-                            CONSTRAINT fk_rdv FOREIGN KEY (rendez_vous_id) REFERENCES rendez_vous(id)
+                            CONSTRAINT fk_ordo_rdv FOREIGN KEY (rendez_vous_id) REFERENCES rendez_vous(id) ON DELETE CASCADE
 );
 
--- =====================
--- TABLE LIGNE MEDICAMENT
--- =====================
 CREATE TABLE ligne_medicament (
                                   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                  ordonnance_id BIGINT,
-                                  nom_medicament VARCHAR(100),
-                                  posologie VARCHAR(100),
-                                  duree DATETIME,
-                                  CONSTRAINT fk_ordonnance FOREIGN KEY (ordonnance_id) REFERENCES ordonnance(id)
+                                  ordonnance_id BIGINT NOT NULL,
+                                  nom_medicament VARCHAR(255) NOT NULL,
+                                  posologie VARCHAR(255),
+                                  duree VARCHAR(100),
+                                  CONSTRAINT fk_ligne_ordo FOREIGN KEY (ordonnance_id) REFERENCES ordonnance(id) ON DELETE CASCADE
 );
 
--- =====================
--- TABLES DE SÉCURITÉ
--- =====================
 CREATE TABLE app_role (
                           role_name VARCHAR(50) PRIMARY KEY
 );
@@ -75,13 +59,17 @@ CREATE TABLE app_role (
 CREATE TABLE app_user (
                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           username VARCHAR(50) UNIQUE NOT NULL,
-                          password VARCHAR(255) NOT NULL
+                          password VARCHAR(255) NOT NULL,
+                          nom VARCHAR(100),
+                          prenom VARCHAR(100),
+                          email VARCHAR(100),
+                          actif BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE app_user_roles (
                                 app_user_id BIGINT,
                                 roles_role_name VARCHAR(50),
                                 PRIMARY KEY (app_user_id, roles_role_name),
-                                CONSTRAINT fk_user FOREIGN KEY (app_user_id) REFERENCES app_user(id),
-                                CONSTRAINT fk_role FOREIGN KEY (roles_role_name) REFERENCES app_role(role_name)
+                                CONSTRAINT fk_user FOREIGN KEY (app_user_id) REFERENCES app_user(id) ON DELETE CASCADE,
+                                CONSTRAINT fk_role FOREIGN KEY (roles_role_name) REFERENCES app_role(role_name) ON DELETE CASCADE
 );

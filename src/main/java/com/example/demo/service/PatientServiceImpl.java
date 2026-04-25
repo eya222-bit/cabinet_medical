@@ -1,17 +1,16 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
+
 import com.example.demo.entity.Patient;
 import com.example.demo.repository.PatientRepository;
-import com.example.demo.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-
 public class PatientServiceImpl implements PatientService {
-@Autowired
-    private  PatientRepository patientRepository ;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @Override
     public List<Patient> getAllPatients() {
@@ -21,7 +20,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient getPatientById(Long id) {
         return patientRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Patient non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Patient non trouvé avec id : " + id));
     }
 
     @Override

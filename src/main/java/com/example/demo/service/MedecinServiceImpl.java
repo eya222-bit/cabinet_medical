@@ -1,18 +1,16 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
+
 import com.example.demo.entity.Medecin;
 import com.example.demo.repository.MedecinRepository;
-import com.example.demo.service.MedecinService;
 import org.springframework.beans.factory.annotation.Autowired;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-
 @Service
-@RequiredArgsConstructor
 public class MedecinServiceImpl implements MedecinService {
-@Autowired
-    private  MedecinRepository medecinRepository;
+
+    @Autowired
+    private MedecinRepository medecinRepository;
 
     @Override
     public List<Medecin> getAllMedecins() {
@@ -22,9 +20,8 @@ public class MedecinServiceImpl implements MedecinService {
     @Override
     public Medecin getMedecinById(Long id) {
         return medecinRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Médecin non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Médecin non trouvé"));
     }
-    
 
     @Override
     public Medecin saveMedecin(Medecin medecin) {

@@ -1,10 +1,10 @@
 package com.example.demo.repository;
 
-
-
-import com.example.demo.entity.AppUser;
+import com.example.demo.entity.AppUser;   // Import explicite
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository extends JpaRepository<AppUser, Long> {
-    com.example.demo.entity.AppUser findByUsername(String username);
+    AppUser findByUsername(String username);
 }
