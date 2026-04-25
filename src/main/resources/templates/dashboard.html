@@ -1,15 +1,102 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout/base}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head><title>Dashboard</title></head>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Dashboard</title>
+</head>
 <body>
 <div layout:fragment="content">
-    <h1>Tableau de bord</h1>
-    <div class="row">
+    <h1 class="mb-4">Tableau de bord</h1>
+
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    Bienvenue <span th:text="${#authentication.name}"></span>
+                    <h6 class="text-muted mb-1">RDV du jour</h6>
+                    <h3 class="mb-0" th:text="${dashboardData.totalRdvJour}">0</h3>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">RDV de la semaine</h6>
+                    <h3 class="mb-0" th:text="${dashboardData.totalRdvSemaine}">0</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">Patients en attente</h6>
+                    <h3 class="mb-0" th:text="${dashboardData.patientsEnAttente}">0</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <strong>Rendez-vous du jour</strong>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>Date/Heure</th>
+                        <th>Patient</th>
+                        <th>Médecin</th>
+                        <th>Statut</th>
+                        <th>Motif</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(dashboardData.rdvDuJour)}">
+                        <td colspan="5" class="text-center text-muted">Aucun rendez-vous aujourd'hui.</td>
+                    </tr>
+                    <tr th:each="rdv : ${dashboardData.rdvDuJour}">
+                        <td th:text="${#temporals.format(rdv.dateHeure, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${rdv.patientPrenom + ' ' + rdv.patientNom}"></td>
+                        <td th:text="${rdv.medecinPrenom + ' ' + rdv.medecinNom}"></td>
+                        <td th:text="${rdv.statut}"></td>
+                        <td th:text="${rdv.motif}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+            <strong>Rendez-vous de la semaine</strong>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>Date/Heure</th>
+                        <th>Patient</th>
+                        <th>Médecin</th>
+                        <th>Statut</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(dashboardData.rdvSemaine)}">
+                        <td colspan="4" class="text-center text-muted">Aucun rendez-vous cette semaine.</td>
+                    </tr>
+                    <tr th:each="rdv : ${dashboardData.rdvSemaine}">
+                        <td th:text="${#temporals.format(rdv.dateHeure, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${rdv.patientPrenom + ' ' + rdv.patientNom}"></td>
+                        <td th:text="${rdv.medecinPrenom + ' ' + rdv.medecinNom}"></td>
+                        <td th:text="${rdv.statut}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
