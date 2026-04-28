@@ -1,21 +1,26 @@
 package com.example.demo.config;
 
+import com.example.demo.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -23,46 +28,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin123"))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails medecin = User.builder()
-                .username("medecin")
-                .password(passwordEncoder().encode("medecin123"))
-                .roles("MEDECIN")
-                .build();
-
-        UserDetails secretaire = User.builder()
-                .username("secretaire")
-                .password(passwordEncoder().encode("secretaire123"))
-                .roles("SECRETAIRE")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, medecin, secretaire);
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
+        auth.userDetailsService(customUserDetailsService)
+            .passwordEncoder(passwordEncoder());
+        return auth.build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/webjars/**", "/css/**", "/js/**", "/login", "/logout").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                )
-                .csrf(AbstractHttpConfigurer::disable); // Optionnel, pour tester plus facilement
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/webjars/**", "/css/**", "/js/**", "/login", "/logout").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/dashboard", true)
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+            )
+            .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

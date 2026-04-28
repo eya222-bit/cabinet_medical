@@ -52,8 +52,8 @@ CREATE TABLE ligne_medicament (
                                   CONSTRAINT fk_ligne_ordo FOREIGN KEY (ordonnance_id) REFERENCES ordonnance(id) ON DELETE CASCADE
 );
 
-CREATE TABLE app_role (
-                          role_name VARCHAR(50) PRIMARY KEY
+CREATE TABLE app_role ( id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                          name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE app_user (
@@ -68,8 +68,8 @@ CREATE TABLE app_user (
 
 CREATE TABLE app_user_roles (
                                 app_user_id BIGINT,
-                                roles_role_name VARCHAR(50),
-                                PRIMARY KEY (app_user_id, roles_role_name),
+                                app_role_id BIGINT,
+                                PRIMARY KEY (app_user_id, app_role_id),
                                 CONSTRAINT fk_user FOREIGN KEY (app_user_id) REFERENCES app_user(id) ON DELETE CASCADE,
-                                CONSTRAINT fk_role FOREIGN KEY (roles_role_name) REFERENCES app_role(role_name) ON DELETE CASCADE
+                                CONSTRAINT fk_role FOREIGN KEY (app_role_id) REFERENCES app_role(id) ON DELETE CASCADE
 );
