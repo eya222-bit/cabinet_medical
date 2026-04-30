@@ -1,0 +1,18 @@
+<div th:fragment="content">
+
+<h2>Liste des patients</h2>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Nom</th>
+</tr>
+
+<tr th:each="p : ${patients}">
+    <td th:text="${p.id}"></td>
+    <td th:text="${p.nom}"></td>
+</tr>
+
+</table>
+
+</div>

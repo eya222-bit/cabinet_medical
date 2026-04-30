@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<h2>Formulaire Médecin</h2>
+
+<form th:action="@{/admin/medecins/save}" th:object="${medecin}" method="post">
+
+    <input type="hidden" th:field="*{id}" />
+
+    Nom: <input type="text" th:field="*{nom}" /><br>
+    Prénom: <input type="text" th:field="*{prenom}" /><br>
+    Spécialité: <input type="text" th:field="*{specialite}" /><br>
+    Téléphone: <input type="text" th:field="*{telephone}" /><br>
+    Email: <input type="text" th:field="*{email}" /><br>
+	actif: <input type="text" th:field="*{actif}" /><br>
+
+    <button type="submit">💾 Enregistrer</button>
+
+</form>
+
+</body>
+</html>

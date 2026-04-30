@@ -1,4 +1,4 @@
-INSERT INTO app_role (name) VALUES ('ADMIN'), ('MEDECIN'), ('SECRETAIRE');
+INSERT INTO app_role (name) VALUES ('ADMIN'), ('MEDECIN'), ('SECRETAIRE'),('PATIENT');
 
 -- password = "password123" encodé en BCrypt
 INSERT INTO app_user (username, password, nom, prenom, email, actif) VALUES

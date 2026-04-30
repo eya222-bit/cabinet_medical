@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -35,16 +36,21 @@ public class SecurityConfig {
         return auth.build();
     }
 
+   
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/webjars/**", "/css/**", "/js/**", "/login", "/logout").permitAll()
+                .requestMatchers("/","/index", "/login", "/register", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/patient/**").hasRole("PATIENT")
+                .requestMatchers("/medecin/**").hasAnyRole("MEDECIN", "ADMIN")
+                .requestMatchers("/secretaire/**").hasAnyRole("SECRETAIRE", "ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/dashboard", true)
+                .successHandler(customSuccessHandler())  // ✅ remplace defaultSuccessUrl
                 .permitAll()
             )
             .logout(logout -> logout
@@ -54,5 +60,20 @@ public class SecurityConfig {
             )
             .csrf(AbstractHttpConfigurer::disable);
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return (request, response, authentication) -> {
+            for (var auth : authentication.getAuthorities()) {
+                switch (auth.getAuthority()) {
+                    case "ROLE_PATIENT"    -> { response.sendRedirect("/patient/dashboard");    return; }
+                    case "ROLE_MEDECIN"    -> { response.sendRedirect("/medecin/dashboard");    return; }
+                    case "ROLE_SECRETAIRE" -> { response.sendRedirect("/secretaire/dashboard"); return; }
+                    case "ROLE_ADMIN"      -> { response.sendRedirect("/admin/dashboard");      return; }
+                }
+            }
+            response.sendRedirect("/login?error");
+        };
     }
 }

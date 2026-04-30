@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_user")
@@ -27,7 +29,7 @@ public class AppUser {
             inverseJoinColumns = @JoinColumn(name = "app_role_id"))
     private List<AppRole> roles = new ArrayList<>();
 
-    // Getters et setters
+    // Getters  setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getUsername() { return username; }
@@ -43,5 +45,9 @@ public class AppUser {
     public Boolean getActif() { return actif; }
     public void setActif(Boolean actif) { this.actif = actif; }
     public List<AppRole> getRoles() { return roles; }
-    public void setRoles(List<AppRole> roles) { this.roles = roles; }
+    public void setRoles(Set<Optional<AppRole>> set) { this.roles = roles; }
+	public void setEnabled(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }

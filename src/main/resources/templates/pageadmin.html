@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin</title>
+</head>
+<body>
+
+<h1>Dashboard Admin</h1>
+
+<nav>
+    <a th:href="@{/admin/patients}">Patients</a> |
+    <a th:href="@{/admin/medecins}">Médecins</a> |
+    <a th:href="@{/admin/users}">Users</a>
+	<a th:href="@{/admin/medecins/new}">
+	        <button>➕ Ajouter Médecin</button>
+	    </a>
+</nav>
+
+<hr>
+
+
+
+</body>
+</html>

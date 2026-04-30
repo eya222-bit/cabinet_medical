@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @Table(name = "patient")
 public class Patient {
@@ -18,9 +19,17 @@ public class Patient {
 	private LocalDate dateNaissance;
 	private String telephone;
 	private String email;
+	@Column(name = "username")
+	private String username;
 	@Column(columnDefinition = "TEXT")
 	private String antecedents;
 	private LocalDateTime dateCreation = LocalDateTime.now();
+	@OneToOne
+	@JoinColumn(name = "id")
+    private AppUser user;
+	@Transient
+	
+	private String password;
 
 	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
 	private List<RendezVous> rendezVousList = new ArrayList<>();
@@ -46,4 +55,14 @@ public class Patient {
 	public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 	public List<RendezVous> getRendezVousList() { return rendezVousList; }
 	public void setRendezVousList(List<RendezVous> rendezVousList) { this.rendezVousList = rendezVousList; }
+	public void setAppUser(AppUser user2) {
+		// TODO Auto-generated method stub
+		
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 }
